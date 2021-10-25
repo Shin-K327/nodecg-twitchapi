@@ -1,0 +1,47 @@
+{
+  "name": "twitch_api",
+  "version": "0.1.0",
+  "main": "../../index.js",
+  "license": "MIT",
+  "author": "kasa327",
+  "description": "for using twitch-api & event-sub extension",
+  "scripts": {
+    "start": "node ../../index.js",
+    "watch:dashboard": "parcel watch src/browser/dashboard/*.html -d ./dashboard --public-url ./",
+    "watch:extension": "tsc -b src/extension/ -w ",
+    "schema:types": "nodecg schema-types --out-dir src/nodecg/generated schemas"
+  },
+  "nodecg": {
+    "compatibleRange": "~1.8.1",
+    "dashboardPanels": [
+      {
+        "name": "api-control",
+        "title": "Api Control",
+        "width": 3,
+        "file": "api-control.html",
+        "headerColor": "#9146ff"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.23.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "styled-components": "^5.3.1"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/react": "^17.0.30",
+    "@types/react-dom": "^17.0.9",
+    "@types/styled-components": "^5.1.15",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "parcel": "^2.0.0",
+    "parcel-bundler": "^1.12.5",
+    "prettier": "^2.4.1",
+    "ts-nodecg": "^0.3.1",
+    "typescript": "^4.4.4"
+  }
+}

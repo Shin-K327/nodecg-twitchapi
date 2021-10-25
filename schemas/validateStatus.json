@@ -1,0 +1,32 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"oneOf": [
+		{
+			"type": "null"
+		},
+		{
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"client_id": {
+					"type": "string"
+				},
+				"login": {
+					"type": "string"
+				},
+				"user_id": {
+					"type": "string"
+				},
+				"expires_in": {
+					"type": "number"
+				},
+				"is_valid": {
+					"type": "boolean"
+				}
+			},
+			"required": [
+				"is_valid"
+			]
+		}
+	]
+}
