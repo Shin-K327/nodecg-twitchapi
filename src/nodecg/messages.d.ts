@@ -1,3 +1,4 @@
+
 type TCreateStateMsg = {
   data: string;
 };
@@ -12,14 +13,21 @@ type TIdAndSecret = {
   data: TAuthObject;
 };
 
-type TRefreshToken = {
-  data: null;
+type TApiData = {
+  method: 'get' | 'post' | 'patch' | 'put';
+  url: string;
+  data?: object;
+};
+
+type TRequestApi = {
+  data: TApiData;
 };
 
 export type MessageMap = {
   createState: TCreateStateMsg;
   idAndSecret: TIdAndSecret;
-  refreshToken: TRefreshToken;
-  mountListner: { data: boolean };
+  requestApi: TRequestApi;
+  refreshToken: { data: null };
+  mountListener: { data: boolean };
   startCm: { data: null };
 };

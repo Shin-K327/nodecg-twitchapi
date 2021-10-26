@@ -3,7 +3,7 @@ import { NodeCG } from './nodecg';
 import { AccsessToken } from '../nodecg/generated';
 import { resValidate } from './responsetypes';
 
-export const twitch = (nodecg: NodeCG): void => {
+export const twitchAuth = (nodecg: NodeCG): void => {
   const client_id = nodecg.bundleConfig.twitch.client_id || null;
   const client_secret = nodecg.bundleConfig.twitch.client_secret || null;
   const scopes = nodecg.bundleConfig.twitch.scopes || null;
@@ -63,6 +63,34 @@ export const twitch = (nodecg: NodeCG): void => {
     }
   });
 
+  // define messages
+  nodecg.listenFor('requestApi', (message) => {
+    if (
+      accessTokenRep.value &&
+      validateStatusRep.value &&
+      validateStatusRep.value.client_id
+    ) {
+      axios({
+        params: { broadcaster_id: validateStatusRep.value.user_id },
+        method: message.method,
+        url: message.url,
+        data: message.data,
+        headers: {
+          Authorization: `Bearer ${accessTokenRep.value.access_token}`,
+          'Client-ID': validateStatusRep.value.client_id,
+        },
+      })
+        .then((response) => {
+          console.log(response.status, response.statusText);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    } else {
+      console.log('token is not ready');
+    }
+  });
+
   //  define routers
   app.get('/twitch-api/redirect', (req, res) => {
     if (req.query.code && req.query.scope && req.query.state === state) {
@@ -85,9 +113,9 @@ export const twitch = (nodecg: NodeCG): void => {
         });
     } else {
       res.send('ここはトークンリダイレクト用ページです');
-	  if(req.body){
-		  console.log(req.body)
-	  }
+      if (req.body) {
+        console.log(req.body);
+      }
     }
   });
 

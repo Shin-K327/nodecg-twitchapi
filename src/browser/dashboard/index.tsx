@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { GetToken } from './components/GetToken';
+import { UseApi } from './components/UseApi';
 
 const config = nodecg.bundleConfig.twitch;
 const validateStatusRep = nodecg.Replicant('validateStatus');
@@ -37,7 +38,7 @@ const App: React.FC = () => {
   } else if (tokenState === false) {
     return <GetToken />;
   } else if (tokenState) {
-    return <p>API操作パネル予定地</p>;
+    return <UseApi />;
   }
 
   return <div>loading...{tokenState}</div>;

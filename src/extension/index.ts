@@ -1,6 +1,6 @@
 import { NodeCG } from './nodecg';
-import { twitch } from './twitch';
+import { twitchAuth } from './twitch-auth';
 
 export = (nodecg: NodeCG): void => {
-  twitch(nodecg);
+  twitchAuth(nodecg);
 };
