@@ -11,7 +11,7 @@ twitchのApi及びEventSubをnodeCG上で利用可能にするためのバンド
 
 ## 使い方(暫定)
 TwitchAPIアプリケーションが必要になるので、TwitchDevページから登録してください  
-redirecturlの設定のみ'http://localhost:9090/twitch-api/redirect'を指定してください
+redirecturlの設定のみ 'http://localhost:9090/twitch-api/redirect' を指定してください
 
 NodeCGプロジェクトルートにあるbundlesディレクトリ配下にtwitch_apiディレクトリを作成し、cloneしてください  
 同じくプロジェクトルート下のcfgディレクトリにバンドルコンフィグファイル、twitch_api.jsonを作成し  
