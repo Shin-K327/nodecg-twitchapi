@@ -1,34 +1,81 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { TChannelInfo, TCommercial } from '../../../nodecg/event_response';
 
 export const UseApi: React.FC = () => {
-  const [chInfo, setChInfo] = useState<{
-    gameid?: string;
-    broadcaster_language?: string;
-    title: string;
-  } | null>(null);
+  const [result, setResult] = useState<TCommercial['result'] | null>(null);
+  const [info, setInfo] = useState<TChannelInfo['result'] | null>(null);
+  const [timer, setTimer] = useState<number | null>(null);
 
-  const onInputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChInfo({ ...chInfo, title: e.target.value });
+  useEffect(() => {
+    if (result) {
+      let count = result.data[0].retry_after;
+      const clear = setTimeout(() => {
+        setTimer(count);
+        count -= 1;
+        if (count == 0) {
+          clearInterval(clear);
+          setTimer(null);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(clear);
+        setTimer(null);
+      };
+    }
+  }, [result]);
+
+  const onClickStartCm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    nodecg
+      .sendMessage('reqStartCommercial', { length: 30 })
+      .then((result) => {
+        setResult(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    e.preventDefault();
   };
 
-  const onClickSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (chInfo != null) {
-      nodecg.sendMessage('requestApi', {
-        method: 'patch',
-        url: 'https://api.twitch.tv/helix/channels',
-        data: chInfo,
+  const onClickGetInfo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    nodecg
+      .sendMessage('reqGetChannelInfo', null)
+      .then((result) => {
+        console.log('Success!!');
+        setInfo(result);
+      })
+      .catch(() => {
+        console.log('error!!');
       });
-    }
-	e.preventDefault()
+    e.preventDefault();
+  };
+
+  const onClickMountEventSub = (e: React.MouseEvent<HTMLButtonElement>) => {
+    nodecg.sendMessage('mountSubscription', 'channel.follow');
+    e.preventDefault();
+  };
+
+  const onClickUnmountAll = (e: React.MouseEvent<HTMLButtonElement>) => {
+    nodecg.sendMessage('unmountAllSubscription', null);
+    e.preventDefault();
   };
 
   return (
     <div>
-      <form>
-        <label>配信タイトル</label>
-        <input type="text" onChange={onInputTitle} />
-        <button onClick={onClickSubmit}>更新</button>
-      </form>
+      <button onClick={onClickStartCm}>CM再生開始</button>
+      <p>リトライカウント：{timer ? timer : '--'}</p>
+      <button onClick={onClickGetInfo}>情報取得</button>
+      {info != null &&
+        info.data.map((item, key) => (
+          <span key={key}>
+            <h2>{item.title}</h2>
+            <h3>{item.game_name}</h3>
+            <h5>
+              {item.broadcaster_login}/{item.broadcaster_name}
+            </h5>
+          </span>
+        ))}
+      <button onClick={onClickMountEventSub}>通知取得開始</button>
+      <button onClick={onClickUnmountAll}>サブスクリプション削除</button>
     </div>
   );
 };

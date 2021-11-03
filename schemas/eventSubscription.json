@@ -1,0 +1,66 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"id": {
+				"type": "string"
+			},
+			"status": {
+				"type": "string"
+			},
+			"type": {
+				"type": "string"
+			},
+			"version": {
+				"type": "string"
+			},
+			"cost": {
+				"type": "number"
+			},
+			"condition": {
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"broadcaster_user_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"broadcaster_user_id"
+				]
+			},
+			"transport": {
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"method": {
+						"type": "string"
+					},
+					"callback": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"callback",
+					"method"
+				]
+			},
+			"created_at": {
+				"type": "string"
+			}
+		},
+		"required": [
+			"type",
+			"condition",
+			"cost",
+			"created_at",
+			"id",
+			"status",
+			"transport",
+			"version"
+		]
+	}
+}

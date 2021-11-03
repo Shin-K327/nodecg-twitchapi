@@ -5,12 +5,18 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface Configschema {
-	twitch: {
-		client_id: string;
-		client_secret: string;
-		scopes: string[];
-		state: string;
-		secret?: string;
+export type EventSubscription = {
+	id: string;
+	status: string;
+	type: string;
+	version: string;
+	cost: number;
+	condition: {
+		broadcaster_user_id: string;
 	};
-}
+	transport: {
+		method: string;
+		callback: string;
+	};
+	created_at: string;
+}[];

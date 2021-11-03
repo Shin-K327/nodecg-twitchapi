@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { NodeCG } from './nodecg';
-import { AccsessToken } from '../nodecg/generated';
-import { resValidate } from './responsetypes';
+import { AccsessToken, AppToken } from '../nodecg/generated';
+import { ValidateStatus } from '../nodecg/generated';
 
 export const twitchAuth = (nodecg: NodeCG): void => {
   const client_id = nodecg.bundleConfig.twitch.client_id || null;
@@ -17,11 +17,16 @@ export const twitchAuth = (nodecg: NodeCG): void => {
   // define Replicant
   const validateStatusRep = nodecg.Replicant('validateStatus', {
     persistent: true,
-    defaultValue: { is_valid: false },
+    defaultValue: null,
   });
 
   const accessTokenRep = nodecg.Replicant('accessToken', {
     persistent: true,
+    defaultValue: null,
+  });
+
+  const appTokenRep = nodecg.Replicant('appToken', {
+    persistent: false,
     defaultValue: null,
   });
 
@@ -39,57 +44,46 @@ export const twitchAuth = (nodecg: NodeCG): void => {
   accessTokenRep.on('change', (newValue) => {
     if (newValue) {
       api
-        .get<resValidate>('validate', {
+        .get<ValidateStatus>('validate', {
           headers: {
             Authorization: `Bearer ${newValue.access_token}`,
           },
         })
         .then((response) => {
-          validateStatusRep.value = {
-            ...validateStatusRep.value,
-            client_id: response.data.client_id,
-            login: response.data.login,
-            user_id: response.data.user_id,
-            expires_in: response.data.expires_in,
-            is_valid: true,
-          };
+          if (response.data) {
+            validateStatusRep.value = {
+              ...response.data,
+              access_token: newValue.access_token,
+            };
+            getAppToken();
+          }
         })
         .catch((error) => {
           console.log(error.response.data.message);
-          validateStatusRep.value = { is_valid: false };
+          validateStatusRep.value = null;
         });
-    } else if (validateStatusRep) {
-      validateStatusRep.value = { ...validateStatusRep.value, is_valid: false };
+    } else {
+      validateStatusRep.value = null;
     }
   });
 
-  // define messages
-  nodecg.listenFor('requestApi', (message) => {
-    if (
-      accessTokenRep.value &&
-      validateStatusRep.value &&
-      validateStatusRep.value.client_id
-    ) {
-      axios({
-        params: { broadcaster_id: validateStatusRep.value.user_id },
-        method: message.method,
-        url: message.url,
-        data: message.data,
-        headers: {
-          Authorization: `Bearer ${accessTokenRep.value.access_token}`,
-          'Client-ID': validateStatusRep.value.client_id,
-        },
+  // get app token
+  const getAppToken = () => {
+    api
+      .post<AppToken>('token', {
+        client_id: nodecg.bundleConfig.twitch.client_id,
+        client_secret: nodecg.bundleConfig.twitch.client_secret,
+        grant_type: 'client_credentials',
+        scope: nodecg.bundleConfig.twitch.scopes.join(' '),
       })
-        .then((response) => {
-          console.log(response.status, response.statusText);
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    } else {
-      console.log('token is not ready');
-    }
-  });
+      .then((response) => {
+        appTokenRep.value = response.data;
+        console.log('app token is ready to use');
+      })
+      .catch((error) => {
+        console.log(`error! failed to get token\n${error.response.message}`);
+      });
+  };
 
   //  define routers
   app.get('/twitch-api/redirect', (req, res) => {

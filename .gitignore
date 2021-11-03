@@ -1,3 +1,6 @@
 /node_modules/
 /deprecated/
 /.cache/
+/src/extension/local_settings.ts
+/extension/
+/dashboard/

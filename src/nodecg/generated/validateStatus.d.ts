@@ -6,9 +6,10 @@
  */
 
 export type ValidateStatus = null | {
-	client_id?: string;
-	login?: string;
-	user_id?: string;
-	expires_in?: number;
-	is_valid: boolean;
+	client_id: string;
+	login: string;
+	scopes: string[];
+	user_id: string;
+	expires_in: number;
+	access_token: string;
 };

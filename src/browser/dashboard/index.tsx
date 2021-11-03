@@ -7,13 +7,12 @@ const config = nodecg.bundleConfig.twitch;
 const validateStatusRep = nodecg.Replicant('validateStatus');
 
 const App: React.FC = () => {
-  const [tokenState, setTokenState] = useState<boolean | null>(null);
+  const [tokenState, setTokenState] = useState<boolean>(false);
 
   useEffect(() => {
     validateStatusRep.on('change', (newValue) => {
-      console.log(newValue);
       if (newValue != null) {
-        setTokenState(newValue.is_valid);
+        setTokenState(true);
       }
     });
     return () => {
@@ -35,7 +34,7 @@ const App: React.FC = () => {
         </p>
       </div>
     );
-  } else if (tokenState === false) {
+  } else if (!tokenState) {
     return <GetToken />;
   } else if (tokenState) {
     return <UseApi />;

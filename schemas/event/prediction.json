@@ -1,0 +1,110 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"id": {
+			"type": "string"
+		},
+		"broadcaster_user_id": {
+			"type": "string"
+		},
+		"broadcaster_user_login": {
+			"type": "string"
+		},
+		"broadcaster_user_name": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		},
+		"outcomes": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"color": {
+						"type": "string"
+					},
+					"users": {
+						"type": "number"
+					},
+					"channel_points": {
+						"type": "number"
+					},
+					"top_predictors": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"user_name": {
+									"type": "string"
+								},
+								"user_login": {
+									"type": "string"
+								},
+								"user_id": {
+									"type": "string"
+								},
+								"channel_points_won": {
+									"oneOf": [
+										{
+											"type": "null"
+										},
+										{
+											"type": "number"
+										}
+									]
+								},
+								"channel_points_used": {
+									"type": "number"
+								}
+							},
+							"required": [
+								"user_name",
+								"user_login",
+								"user_id",
+								"channel_points_won",
+								"channel_points_used"
+							]
+						}
+					}
+				},
+				"required": [
+					"id",
+					"color",
+					"title"
+				]
+			}
+		},
+		"started_at": {
+			"type": "string"
+		},
+		"locks_at": {
+			"type": "string"
+		},
+		"locked_at": {
+			"type": "string"
+		},
+		"ended_at": {
+			"type": "string"
+		}
+	},
+	"required": [
+		"title",
+		"id",
+		"broadcaster_user_id",
+		"broadcaster_user_login",
+		"broadcaster_user_name",
+		"outcomes",
+		"started_at"
+	]
+}

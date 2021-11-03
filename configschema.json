@@ -21,6 +21,11 @@
 				},
 				"state": {
 					"type": "string"
+				},
+				"secret": {
+					"type": "string",
+					"minLength": 10,
+					"maxLength": 100
 				}
 			},
 			"required": [
