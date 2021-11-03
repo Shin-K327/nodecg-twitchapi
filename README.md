@@ -60,6 +60,8 @@ src/twitch-event.ts内の　const callbackUrl に起動したhttpsサーバの�
             "channel:manage:broadcast",
             "channel:read:editors",
             "channel:manage:extensions"
+            "channel:manage:polls",
+            "channel:manage:predictions"
         ],
         "state": "samplestring000"
         "secret": <Define random strings>
